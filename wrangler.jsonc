@@ -1,4 +1,5 @@
 {
   "name": "bettehraz-worker",
-  "main": "worker.js"
+  "main": "worker.js",
+  "compatibility_date": "2026-08-12"
 }
