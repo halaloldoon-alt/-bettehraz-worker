@@ -1,22 +1,29 @@
 export default {
   async fetch(request, env) {
+    console.log("REQUEST:", request.method, request.url);
+
     if (request.method === "GET") {
       return new Response("Bettehraz Bot is running!");
     }
 
     if (request.method !== "POST") {
-      return new Response("OK");
+      return new Response("Method not allowed", { status: 405 });
     }
 
     try {
       const update = await request.json();
 
+      console.log("TELEGRAM UPDATE:", JSON.stringify(update));
+
       if (update.message) {
         const chatId = update.message.chat.id;
         const text = update.message.text || "";
 
+        console.log("CHAT ID:", chatId);
+        console.log("TEXT:", text);
+
         if (text === "/start") {
-          await fetch(
+          const response = await fetch(
             `https://api.telegram.org/bot${env.BOT_TOKEN}/sendMessage`,
             {
               method: "POST",
@@ -29,12 +36,16 @@ export default {
               })
             }
           );
+
+          console.log("TELEGRAM RESPONSE:", await response.text());
         }
       }
 
-      return new Response("OK");
+      return new Response("OK", { status: 200 });
+
     } catch (error) {
-      return new Response("OK");
+      console.log("ERROR:", error.message);
+      return new Response("OK", { status: 200 });
     }
   }
 };
